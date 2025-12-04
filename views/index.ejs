@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PixelFlow - Image Uploader</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .logo {
+        margin-bottom: 30px;
+      }
+
+      .logo i {
+        font-size: 3rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+      }
+
+      .logo h1 {
+        color: #333;
+        font-weight: 700;
+        font-size: 2rem;
+      }
+
+      .logo p {
+        color: #666;
+        font-size: 1rem;
+        margin-top: 5px;
+      }
+
+      .error-message {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+        color: white;
+        padding: 15px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        animation: shake 0.5s ease-in-out;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-5px);
+        }
+        75% {
+          transform: translateX(5px);
+        }
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .file-input-wrapper input[type="file"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+      }
+
+      .file-input-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+
+      .file-input-label:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .file-input-label i {
+        font-size: 1.2rem;
+      }
+
+      .submit-btn {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+      }
+
+      .submit-btn:active {
+        transform: translateY(0);
+      }
+
+      #uploaded-image-container {
+        margin-top: 40px;
+        animation: fadeIn 0.8s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .success-card {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+        animation: bounceIn 0.8s ease-out;
+      }
+
+      @keyframes bounceIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.3);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.05);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .success-card h2 {
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+
+      .success-card img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease;
+      }
+
+      .success-card img:hover {
+        transform: scale(1.02);
+      }
+
+      .file-name {
+        margin-top: 10px;
+        color: #666;
+        font-size: 0.9rem;
+        font-style: italic;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .container {
+          padding: 30px 20px;
+          margin: 20px;
+        }
+
+        .logo h1 {
+          font-size: 1.7rem;
+        }
+
+        .logo i {
+          font-size: 2.5rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 10px;
+        }
+
+        .container {
+          padding: 25px 15px;
+        }
+
+        .logo h1 {
+          font-size: 1.5rem;
+        }
+
+        .file-input-label,
+        .submit-btn {
+          padding: 12px 15px;
+        }
+      }
+
+      /* Loading animation */
+      .loading {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
+      }
+
+      .spinner {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <h1>PixelFlow Upload</h1>
+        <p>Upload your images in style</p>
+      </div>
+
+      <!-- Error Message -->
+      <% if (error) { %>
+      <div class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        <%= error %>
+      </div>
+      <% } %>
+
+      <form
+        action="/upload"
+        method="POST"
+        enctype="multipart/form-data"
+        id="upload-form"
+      >
+        <div class="form-group">
+          <div class="file-input-wrapper">
+            <input
+              type="file"
+              name="file"
+              id="file-input"
+              accept="image/*"
+              required
+            />
+            <label for="file-input" class="file-input-label">
+              <i class="fas fa-image"></i>
+              <span>Choose an Image</span>
+            </label>
+          </div>
+          <div class="file-name" id="file-name">No file chosen</div>
+        </div>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p>Uploading your image...</p>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" value="Upload to Cloud" class="submit-btn" />
+        </div>
+      </form>
+
+      <div id="uploaded-image-container">
+        <% if (url) { %>
+        <div class="success-card">
+          <h2><i class="fas fa-check-circle"></i> Upload Successful!</h2>
+          <img src="<%= url %>" alt="Uploaded Image" />
+          <p>Your image has been uploaded successfully</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <script>
+      // File input display
+      document
+        .getElementById("file-input")
+        .addEventListener("change", function (e) {
+          const fileName = this.files[0]
+            ? this.files[0].name
+            : "No file chosen";
+          document.getElementById("file-name").textContent = fileName;
+        });
+
+      // Form submission loading
+      document
+        .getElementById("upload-form")
+        .addEventListener("submit", function () {
+          document.getElementById("loading").style.display = "block";
+        });
+
+      // Add some interactive effects
+      document.addEventListener("DOMContentLoaded", function () {
+        const container = document.querySelector(".container");
+        container.style.opacity = "0";
+        container.style.transform = "translateY(20px)";
+
+        setTimeout(() => {
+          container.style.transition = "all 0.8s ease";
+          container.style.opacity = "1";
+          container.style.transform = "translateY(0)";
+        }, 100);
+      });
+    </script>
+  </body>
+</html>
